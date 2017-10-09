@@ -19,14 +19,13 @@
  */
 package org.openremote.manager.client.service;
 
-import elemental.client.Browser;
-import elemental.events.CloseEvent;
-import elemental.html.Location;
-import elemental.html.WebSocket;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import elemental2.dom.DomGlobal;
+import elemental2.dom.Location;
+import elemental2.dom.WebSocket;
 import org.openremote.manager.client.event.*;
 import org.openremote.manager.client.event.session.*;
 import org.openremote.manager.client.util.Timeout;
-import org.openremote.model.Constants;
 import org.openremote.model.event.bus.EventBus;
 import org.openremote.model.event.shared.*;
 
@@ -44,7 +43,8 @@ public class EventServiceImpl implements EventService {
                                       EventSubscriptionMapper eventSubscriptionMapper,
                                       CancelEventSubscriptionMapper cancelEventSubscriptionMapper,
                                       UnauthorizedEventSubscriptionMapper unauthorizedEventSubscriptionMapper) {
-        Location location = Browser.getWindow().getLocation();
+        // TODO Wait for next elemental2 release: https://github.com/google/elemental2/issues/2
+        Location location = DomGlobal.location;
         return new EventServiceImpl(
             securityService,
             eventBus,

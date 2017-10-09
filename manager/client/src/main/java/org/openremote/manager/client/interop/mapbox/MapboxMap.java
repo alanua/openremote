@@ -20,7 +20,7 @@
 package org.openremote.manager.client.interop.mapbox;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import elemental.dom.Node;
+import elemental2.dom.Element;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
@@ -71,15 +71,15 @@ public class MapboxMap {
 
     public native LngLatBounds getBounds();
 
-    public native Node getCanvas();
+    public native Element getCanvas();
 
-    public native Node getCanvasContainer();
+    public native Element getCanvasContainer();
 
     public native LngLat getCenter();
 
     public native String[] getClasses();
 
-    public native Node getContainer();
+    public native Element getContainer();
 
     public native JavaScriptObject getFilter(String layerId);
 

@@ -19,10 +19,9 @@
  */
 package org.openremote.manager.client.widget;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.FlowPanel;
-import elemental.client.Browser;
+import elemental2.dom.DomGlobal;
 import org.openremote.manager.client.interop.mapbox.*;
 import org.openremote.model.geo.GeoJSON;
 import org.openremote.model.value.ArrayValue;
@@ -179,7 +178,7 @@ public class MapWidget extends FlowPanel {
             throw new IllegalStateException("Map not ready");
         mapboxMap.resize();
         // This is not reliable, so do it again a bit later
-        Browser.getWindow().setTimeout(() -> mapboxMap.resize(), 200);
+        DomGlobal.setTimeout(p -> mapboxMap.resize(), 200);
     }
 
     public void setOpaque(boolean opaque) {
