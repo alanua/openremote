@@ -1,3 +1,6 @@
-task installDist {
+task installDist(type: Copy) {
     dependsOn bowerPrune, bowerUpdate
+    from '.'
+    into "${managerDeploymentConsolesDir}/${projectDir.name}"
+    exclude "build.gradle", "bower.json"
 }
