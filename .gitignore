@@ -18,6 +18,8 @@ out/
 *.iws
 .idea/
 
+.node/
+node_modules/
 bower_components/
 
 console/iOS/DerivedData
