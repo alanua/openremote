@@ -14,11 +14,6 @@ distributions {
             from (resolveTask(":manager:client:installDist")) {
                 into "client"
             }
-            // Populate the /deployment directory in the Manager image
-            from (resolveProject(":deployment:manager").projectDir) {
-                into "deployment"
-                exclude "**/build.gradle", "**/bower.json"
-            }
         }
     }
 }
@@ -28,8 +23,4 @@ installDist {
         // Delete the useless start scripts, they have a hardcoded classpath
         delete "${buildDir}/install/$distributions.main.baseName/server/bin"
     }
-}
-
-clean {
-    delete = "$projectDir/build"
 }
