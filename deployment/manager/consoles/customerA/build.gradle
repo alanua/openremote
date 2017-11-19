@@ -1,6 +1,6 @@
 task installDist(type: Copy) {
     dependsOn bowerPrune, bowerUpdate
     from '.'
-    into "${managerDeploymentConsolesDir}/${projectDir.name}"
+    into "${deploymentConsolesDir}/${projectDir.name}"
     exclude "build.gradle", "bower.json"
 }

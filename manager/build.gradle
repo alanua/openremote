@@ -22,5 +22,8 @@ installDist {
     doLast {
         // Delete the useless start scripts, they have a hardcoded classpath
         delete "${buildDir}/install/$distributions.main.baseName/server/bin"
+
+        // Create empty extensions folder (it is used on manager classpath)
+        println "${new File("${deploymentDir}/extensions").mkdirs()}"
     }
 }
