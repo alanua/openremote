@@ -230,34 +230,42 @@ beforeEvaluate {
 
 // Deployment project configuration
 //
-// Check if project is the root deployment manager and then injects some tasks to handle copying the manager files
-// to the $managerDeploymentDir.
+// Check if project is the root deployment and then injects some tasks to handle copying the manager files
+// to the $deploymentDir.
 //
 // When installDist task executes it copies everything apart from the consoles directory, it then checks each
 // console directory and if it isn't a gradle project (i.e. doesn't have a build.gradle) then the directory is
 // copied to the $managerDeploymentConsoleDir. If it is a gradle project then it is assumed that it has an installDist
 // task and it will handle copying required files to the $managerDeploymentConsoleDir itself.
-beforeEvaluate {
-    // Disable openremote deployment when set as a submodule
-    if (path.startsWith(":openremote:deployment")) {
-        tasks.forEach {
-            it.enabled = false
+
+def isCustomProject = rootProject.name != "openremote" && !path.startsWith(":openremote")
+
+afterEvaluate {
+
+    // All custom projects installDist depend on manager installDist so inject the dependency
+    if (isCustomProject) {
+        def installDistTask = tasks.findByName("installDist")
+        if (installDistTask != null) {
+            installDistTask.dependsOn resolveTask(":manager:installDist")
         }
     }
+}
+
+beforeEvaluate {
+
+    // Add deployment properties so all projects can use them
+    def dirName = isCustomProject ? "custom" : "default"
+    ext.deploymentDir = "${resolveProject(":manager").buildDir}/install/manager/deployment/${dirName}"
+    ext.deploymentConsolesDir = "${ext.deploymentDir}/consoles"
+    ext.deploymentExtensionsDir = "${ext.deploymentDir}/extensions"
 
     if (path.endsWith(":deployment:manager")) {
-        // Add deployment variables so all manager deployment projects can use them
-        ext.managerDeploymentDir = "${resolveProject(":manager").buildDir}/install/manager/deployment"
-        ext.managerDeploymentConsolesDir = "${resolveProject(":manager").buildDir}/install/manager/deployment/consoles"
 
         // Copy everything except the consoles
         task copyExcludingConsoles(type: Copy) {
-            // Ensure manager installDist has run first as this creates the install directory
-            dependsOn resolveTask(":manager:installDist")
-
             from projectDir
             exclude 'consoles'
-            into managerDeploymentDir
+            into deploymentDir
         }
 
         // Create installDist task to copy only 'unmanaged' consoles
@@ -271,7 +279,7 @@ beforeEvaluate {
             // Copy consoles that don't have a build.gradle (if they have a build.gradle then that console is responsible
             // for copying its output to the console deployment folder and must implement an installDist task)
             from 'consoles'
-            into managerDeploymentConsolesDir
+            into deploymentConsolesDir
             include {
                 fileTreeElement ->
                     def consoleDir = fileTreeElement.directory && fileTreeElement.relativePath.parent == RelativePath.EMPTY_ROOT

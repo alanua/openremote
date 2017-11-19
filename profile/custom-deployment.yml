@@ -1,0 +1,10 @@
+version: '2.2'
+
+services:
+    # This service will only populate an empty volume on startup and then exit.
+    # If the volume already contains data, it exits immediately.
+    deployment:
+        build:
+          context: '../manager/build/install/manager'
+          dockerfile: custom.Dockerfile
+        image: openremote/deployment:latest
